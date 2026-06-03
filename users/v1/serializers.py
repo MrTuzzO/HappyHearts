@@ -2,9 +2,9 @@ from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.conf import settings
-from .models import OTP, User
-from .utils import send_otp_email
-from .models import PasswordResetToken
+from ..models import OTP, User
+from ..utils import send_otp_email
+from ..models import PasswordResetToken
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, validators=[validate_password])

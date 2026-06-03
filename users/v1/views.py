@@ -6,11 +6,11 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.tokens import RefreshToken
-from .models import OTP, User
-from .serializers import *
-from .utils import send_otp_email
 from rest_framework.throttling import ScopedRateThrottle
 from django.db import transaction
+from ..models import OTP, User
+from .serializers import *
+from ..utils import send_otp_email
 
 # for Api documentation
 from drf_spectacular.types import OpenApiTypes

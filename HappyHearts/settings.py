@@ -121,10 +121,26 @@ MEDIA_ROOT = BASE_DIR / 'media'
 CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS', '').split(',')
 
 REST_FRAMEWORK = {
-    "DEFAULT_AUTHENTICATION_CLASSES": ("rest_framework_simplejwt.authentication.JWTAuthentication",),
-    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
-    
+    "DEFAULT_PAGINATION_CLASS": "shared.pagination.StandardPagination",
+    "PAGE_SIZE": 20,
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    "EXCEPTION_HANDLER": "shared.exceptions.custom_exception_handler",
+    "DEFAULT_RENDERER_CLASSES": ["shared.renderers.StandardRenderer"],
+
+    "DEFAULT_THROTTLE_RATES": {
+        "user": "60/min",
+        "anon": "5/min",
+        "forgot_password": "3/hour",
+        "resend_otp": "3/hour",
+        "verify_reset_otp": "10/hour",
+    },
 }
 
 SPECTACULAR_SETTINGS = {
@@ -139,6 +155,8 @@ SPECTACULAR_SETTINGS = {
     },
 
     "COMPONENT_SPLIT_REQUEST": True,
+
+    # "SCHEMA_PATH_PREFIX": r"/api/v[0-9]",
 }
 
 SIMPLE_JWT = {
