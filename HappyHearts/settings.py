@@ -17,6 +17,7 @@ DEBUG = os.getenv('DEBUG', 'False') == 'True'
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
 
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -37,6 +38,7 @@ INSTALLED_APPS += [
 
     # Local apps
     'users',
+    'onboarding',
 ]
 
 MIDDLEWARE = [
@@ -171,10 +173,19 @@ SPECTACULAR_SETTINGS = {
     "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": False,
 
+    "CONTACT": {
+        "name": "Khirul Islam",
+        "email": "khirulislam@proton.me"
+    },
+
     "SWAGGER_UI_SETTINGS": {
         "deepLinking": True,
         "persistAuthorization": True,
     },
+
+    # JWT Bearer auth button
+    "SECURITY": [{"BearerAuth": []}],
+    "PATH_PREFIX": "/api/v1",
 
     "COMPONENT_SPLIT_REQUEST": True,
 
@@ -192,3 +203,42 @@ SIMPLE_JWT = {
 }
 
 AUTH_USER_MODEL = 'users.User'
+
+JAZZMIN_SETTINGS = {
+    "site_title": "Happy Hearts Admin",
+    "site_header": "Happy Hearts",
+    "site_brand": "Happy Hearts",
+    "welcome_sign": "Welcome to Happy Hearts admin",
+    "copyright": "Happy Hearts",
+    "search_model": ["users.User", "onboarding.Question"],
+
+    "topmenu_links": [
+        {"name": "Home", "url": "admin:index"},
+        {"model": "users.User"},
+        {"app": "onboarding"},
+    ],
+
+    "show_sidebar": True,
+    "navigation_expanded": True,
+    "order_with_respect_to": ["users", "onboarding", "auth"],
+
+    "icons": {
+        "auth": "fas fa-users-cog",
+        "auth.Group": "fas fa-users",
+        "users.User": "fas fa-user",
+        "users.OTP": "fas fa-key",
+        "users.PasswordResetToken": "fas fa-unlock-alt",
+        "onboarding.Question": "fas fa-question-circle",
+        "onboarding.Choice": "fas fa-list-ul",
+        "onboarding.Answer": "fas fa-reply",
+    },
+    "default_icon_parents": "fas fa-chevron-circle-right",
+    "default_icon_children": "fas fa-circle",
+
+    # Show inlines (e.g. Question's Choices) on the same page instead of a separate tab.
+    "changeform_format": "single",
+}
+
+JAZZMIN_UI_TWEAKS = {
+    "theme": "flatly",
+}
