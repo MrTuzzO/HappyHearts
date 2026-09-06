@@ -1,5 +1,20 @@
 from rest_framework import serializers
-from .models import Question, Choice, Answer
+from .models import Question, Choice, Answer, Child
+
+
+class ChildSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Child
+        fields = (
+            "id", "name", "nickname", "date_of_birth", "age",
+            "gender", "relationship", "profile_image",
+            "created_at", "updated_at",
+        )
+        read_only_fields = ("id", "created_at", "updated_at")
+
+    def create(self, validated_data):
+        validated_data["parent"] = self.context["request"].user
+        return super().create(validated_data)
 
 
 class ChoiceSerializer(serializers.ModelSerializer):
@@ -25,10 +40,11 @@ class AnswerChoiceSerializer(serializers.ModelSerializer):
 class AnswerSerializer(serializers.ModelSerializer):
     choices = AnswerChoiceSerializer(many=True, read_only=True)
     question = QuestionSerializer(read_only=True)
+    child = ChildSerializer(read_only=True)
 
     class Meta:
         model = Answer
-        fields = ("id", "question", "choices", "child_name", "answered_at")
+        fields = ("id", "question", "choices", "child", "answered_at")
 
 
 class AnswerItemSerializer(serializers.Serializer):
@@ -38,15 +54,19 @@ class AnswerItemSerializer(serializers.Serializer):
 
 class OnboardingSubmitSerializer(serializers.Serializer):
     onboard_type = serializers.ChoiceField(choices=Question.ONBOARD_TYPE_CHOICES)
-    child_name = serializers.CharField(max_length=150, required=False, allow_blank=True, default="")
+    child = serializers.PrimaryKeyRelatedField(queryset=Child.objects.all(), required=False, allow_null=True, default=None)
     answers = AnswerItemSerializer(many=True)
 
     def validate(self, attrs):
         onboard_type = attrs["onboard_type"]
-        child_name = attrs.get("child_name", "")
+        child = attrs.get("child")
+        user = self.context["request"].user
 
-        if onboard_type == Question.ONBOARD_TYPE_CHILD and not child_name:
-            raise serializers.ValidationError({"child_name": "child_name is required when onboard_type is 'child'."})
+        if onboard_type == Question.ONBOARD_TYPE_CHILD and child is None:
+            raise serializers.ValidationError({"child": "child is required when onboard_type is 'child'."})
+
+        if child is not None and child.parent_id != user.id:
+            raise serializers.ValidationError({"child": "This child does not belong to you."})
 
         seen_questions = set()
         for item in attrs["answers"]:
@@ -80,14 +100,14 @@ class OnboardingSubmitSerializer(serializers.Serializer):
 
     def save(self, **kwargs):
         user = self.context["request"].user
-        child_name = self.validated_data.get("child_name", "")
+        child = self.validated_data.get("child")
         results = []
 
         for item in self.validated_data["answers"]:
             answer, _created = Answer.objects.update_or_create(
                 user=user,
                 question=item["question"],
-                child_name=child_name,
+                child=child,
                 defaults={},
             )
             answer.choices.set(item["choices"])
