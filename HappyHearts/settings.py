@@ -39,6 +39,7 @@ INSTALLED_APPS += [
     # Local apps
     'users',
     'onboarding',
+    'community',
 ]
 
 MIDDLEWARE = [
@@ -216,11 +217,12 @@ JAZZMIN_SETTINGS = {
         {"name": "Home", "url": "admin:index"},
         {"model": "users.User"},
         {"app": "onboarding"},
+        {"app": "community"},
     ],
 
     "show_sidebar": True,
     "navigation_expanded": True,
-    "order_with_respect_to": ["users", "onboarding", "auth"],
+    "order_with_respect_to": ["users", "onboarding", "community", "auth"],
 
     "icons": {
         "auth": "fas fa-users-cog",
@@ -231,6 +233,11 @@ JAZZMIN_SETTINGS = {
         "onboarding.Question": "fas fa-question-circle",
         "onboarding.Choice": "fas fa-list-ul",
         "onboarding.Answer": "fas fa-reply",
+        "community.PostCategory": "fas fa-tags",
+        "community.Post": "fas fa-newspaper",
+        "community.PostImage": "fas fa-image",
+        "community.Comment": "fas fa-comment-dots",
+        "community.PostLike": "fas fa-heart",
     },
     "default_icon_parents": "fas fa-chevron-circle-right",
     "default_icon_children": "fas fa-circle",

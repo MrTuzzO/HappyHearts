@@ -16,4 +16,5 @@ urlpatterns = [
     # App URLs
     path("api/v1/auth/", include("users.urls")),
     path("api/v1/onboarding/", include("onboarding.urls")),
+    path("api/v1/community/", include("community.urls")),
 ]
