@@ -10,9 +10,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     path('healthz/', health_check, name='health-check'),
-    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
-    path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    path('api/v1/schema/', SpectacularAPIView.as_view(), name='schema'),
+    path('api/v1/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
 
-    # App URLs - V1
-    path("api/v1/auth/", include("users.v1.urls")),
+    # App URLs
+    path("api/v1/auth/", include("users.urls")),
 ]
