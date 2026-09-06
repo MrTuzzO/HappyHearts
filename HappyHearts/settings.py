@@ -35,8 +35,10 @@ INSTALLED_APPS += [
     "rest_framework_simplejwt.token_blacklist",
     'cloudinary_storage',
     'cloudinary',
+    'solo',
 
     # Local apps
+    'core',
     'users',
     'onboarding',
     'community',
@@ -211,18 +213,15 @@ JAZZMIN_SETTINGS = {
     "site_brand": "Happy Hearts",
     "welcome_sign": "Welcome to Happy Hearts admin",
     "copyright": "Happy Hearts",
-    "search_model": ["users.User", "onboarding.Question"],
+    "search_model": ["users.User"],
 
     "topmenu_links": [
         {"name": "Home", "url": "admin:index"},
         {"model": "users.User"},
-        {"app": "onboarding"},
-        {"app": "community"},
     ],
 
     "show_sidebar": True,
     "navigation_expanded": True,
-    "order_with_respect_to": ["users", "onboarding", "community", "auth"],
 
     "icons": {
         "auth": "fas fa-users-cog",
@@ -238,12 +237,10 @@ JAZZMIN_SETTINGS = {
         "community.PostImage": "fas fa-image",
         "community.Comment": "fas fa-comment-dots",
         "community.PostLike": "fas fa-heart",
+        "core.SiteSettings": "fas fa-cogs",
     },
     "default_icon_parents": "fas fa-chevron-circle-right",
     "default_icon_children": "fas fa-circle",
-
-    # Show inlines (e.g. Question's Choices) on the same page instead of a separate tab.
-    "changeform_format": "single",
 }
 
 JAZZMIN_UI_TWEAKS = {
